@@ -6,13 +6,11 @@ import os
 from dotenv import load_dotenv
 
 from aiogram import Bot, Dispatcher, F
-from aiogram.types import Message
 
 from handlers.user import user_router
 from handlers.admin import admin_router
 
 from middleware.db import DataBaseSession
-from sqlalchemy.ext.asyncio import AsyncSession
 
 
 load_dotenv()

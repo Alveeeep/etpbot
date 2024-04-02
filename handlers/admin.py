@@ -1,8 +1,7 @@
-from aiogram import F, Router, types
+from aiogram import F, Router, types, Bot
 from aiogram.filters import Command
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
-from main import bot
 from utils.get_from_excel import get_data_from_excel
 from sqlalchemy.ext.asyncio import AsyncSession
 from filters.chat_types import ChatTypeFilter, IsAdmin
@@ -13,7 +12,7 @@ admin_router = Router()
 admin_router.message.filter(ChatTypeFilter(["private"]), IsAdmin())
 
 
-async def _send_to_users(session: AsyncSession, data: list):
+async def _send_to_users(bot: Bot, session: AsyncSession, data: str):
     users = await orm_get_users_ids(session)
     for user_id in users:
         await bot.send_message(user_id, data, parse_mode='HTML')
@@ -31,8 +30,8 @@ async def admin_sending(message: types.Message, state: FSMContext):
 
 
 @admin_router.message(Settings.receiving)
-@admin_router.message(content_types=types.ContentType.DOCUMENT)
-async def receiving_excel(message: types.Message, state: FSMContext):
+@admin_router.message(F.content_type.in_({'document'}))
+async def receiving_excel(bot: Bot, message: types.Message, state: FSMContext):
     document = message.document
     if document.mime_type == 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
         await bot.download(document, "C:/Users/mkabirov/PycharmProjects/etpbot/utils")
@@ -44,10 +43,10 @@ async def receiving_excel(message: types.Message, state: FSMContext):
 
 @admin_router.message(Settings.received)
 @admin_router.message(F.text == "Да")
-async def confirm_send(message: types.Message, state: FSMContext, session: AsyncSession):
+async def confirm_send(bot: Bot, message: types.Message, state: FSMContext, session: AsyncSession):
     data = await state.get_data()
     res = get_data_from_excel(data['receiving'])
-    await _send_to_users(session, res)
+    await _send_to_users(bot, session, res)
     await state.clear()
 
 
