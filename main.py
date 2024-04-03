@@ -17,7 +17,7 @@ load_dotenv()
 
 from database.engine import create_db, session_maker
 
-bot = Bot(os.getenv("BOT_TOKEN"))  # make .env file with bot token
+bot = Bot(os.getenv("TOKEN"))  # make .env file with bot token
 dp = Dispatcher()
 dp.include_router(user_router)
 dp.include_router(admin_router)

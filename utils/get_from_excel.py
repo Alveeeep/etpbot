@@ -3,8 +3,8 @@ import os
 
 
 def get_data_from_excel(file: str):
-    df = pd.read_excel(file)
-    os.remove(file)
+    df = pd.read_excel("C:\\Users\\alvir\\PycharmProjects\\etpbot\\utils\\{}".format(file))
+    os.remove("C:\\Users\\alvir\\PycharmProjects\\etpbot\\utils\\{}".format(file))
     data = df.values.tolist()
     res = ""
     for el in data:

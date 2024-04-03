@@ -10,7 +10,7 @@ async def orm_get_admins_ids(session: AsyncSession):
     return res.scalars().all()
 
 
-async def orm_get_users_ids(session: AsyncSession):
+async def orm_get_chats_ids(session: AsyncSession):
     query = select(User.tg_id)
     res = await session.execute(query)
     return res.scalars().all()
